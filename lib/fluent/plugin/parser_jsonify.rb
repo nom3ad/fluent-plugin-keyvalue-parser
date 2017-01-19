@@ -40,6 +40,7 @@ module Fluent
             key_construct = ""
           end
         }
+        record[record.keys.last] << (@pair_delimiter + key_construct)
         # $log.debug "gonna emit this record: " + record.to_s + " when ticks at " + time.to_s
         yield nil, record
       end
