@@ -24,13 +24,23 @@ module Fluent
       end
 
       def parse(text)
-      	$log.debug "recieved text = " + text
+        $log.debug "recieved text = " + text
         kv_pairs = text.split(@pair_delimiter)
         $log.debug "kv_pairs  = " + kv_pairs.to_s
         record = {}
+        key_construct = ""
         kv_pairs.each { |kv|
           k, v = kv.split(@key_value_seperator, 2)
-          record[k] = v
+          key_construct << k
+          if v.nil?
+            key_construct << @pair_delimiter
+          else
+            $log.debug "full key ="+key_construct
+            record[key_construct] = v
+            key_construct = ""
+          end
         }
+        # $log.debug "gonna emit this record: " + record.to_s + " when ticks at " + time.to_s
         yield nil, record
+      end
       end
