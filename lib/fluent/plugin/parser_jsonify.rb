@@ -44,4 +44,6 @@ module Fluent
         # $log.debug "gonna emit this record: " + record.to_s + " when ticks at " + time.to_s
         yield nil, record
       end
-      end
+    end
+  end
+end
