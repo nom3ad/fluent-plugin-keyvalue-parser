@@ -30,6 +30,19 @@ module Fluent
 				key_name = ""
 				value = ""
 				tokens.each_with_index do |item,idx|
+					
+					if is_quote_open
+						if item[-1] == "\""
+							is_quote_open = false
+							value  = [value,item[0..-2]].join(@pair_delimiter)
+							record[key_name] = value
+							value = "";key_name = ""
+						else
+							value  = [value,item].join(@pair_delimiter)
+						end
+						next
+					end
+
 					if item.split(@key_value_seperator,2)[1].nil?
 
 						if is_quote_open
@@ -47,8 +60,18 @@ module Fluent
 						end
 
 					else
-						k,v = item.split(@key_value_seperator,2)
-						key_name << k
+						parts = item.split(@key_value_seperator)
+						#$log.info "parts : " + parts.to_s
+						k = parts[0]
+						v = parts[1..-1].join(@key_value_seperator)
+						#$log.info "key :" + k + "  " + "values : "+ v
+
+						#if !is_quote_open
+							key_name << k
+						#else
+						#	value << (@pair_delimiter+k + @key_value_seperator)
+						#end
+
 						if v[0] == "\""
 							is_quote_open = true
 							if v[-1] == "\""
