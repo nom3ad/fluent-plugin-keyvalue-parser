@@ -13,21 +13,40 @@ module Fluent
 			# Register this parser as "jsonify"
 			Plugin.register_parser("jsonify", self)
 
-			config_param :pair_delimiter, :string, :default => " " 
+			config_param :pair_delimiter,      :string, :default => " " 
 			config_param :key_value_seperator, :string, :default => "," 
-
-			def configure(conf)
-				super
-				#  if @pair_@pair_delimiteiter.length != 1
-				#  raise ConfigError, "@pair_delimiteiter must be a single character. #{@@pair_delimiteiter} is not."
-				# end
+			
+			config_param :adjustment_rules            , :default => false do |val|
+				rule_hash = false
+				if val != ""
+					begin
+						rule_hash_raw = JSON.parse(val)
+					rescue JSON::ParserError => ex
+						# Fluent::ConfigParseError, "got incomplete JSON" will be raised
+						raise Fluent::ConfigError, "#{ex.class}: #{ex.message}"
+					end
+					raise Fluent::ConfigError, "adjustment_rules is not a hash" unless rule_hash_raw.is_a?(Hash)
+					#rule_hash = make_rule_hash(rule_hash_raw)
+					rule_hash = {}
+					rule_hash_raw.each do |k,v|
+						regx_str = "(?<scavenged>#{v})#{@pair_delimiter}(?<remnants>.*$)"
+						rule_regex = //.class.new(regx_str)
+						rule_hash[k] = rule_regex
+					end
+				end
+				rule_hash
 			end
 
+
+
+			def configure(conf)
+				super			end
+
 			def parse(text)
+				
 				record = {}
 				is_at_key =true
 				is_quote_open = false
-				
 				key_name = ""
 				value = ""
 
@@ -82,7 +101,36 @@ module Fluent
 					end 
 				end
 
+				if @adjustment_rules 
+					$log.info "adjusting record ..."
+					record = adjust_record(record)
+				end
 				yield nil,record
+			end
+
+
+
+			def adjust_record(record)
+				record.keys.each_with_index do |k,i|
+					if adjustment_rules.key? k
+						neighbour_key = record.keys[i+1]
+						valstr = [record[k],neighbour_key].join(@pair_delimiter)
+						puts "origina : " + valstr
+						m = adjustment_rules[k].match(valstr)
+						unless m
+							puts "no match"
+						else
+							puts m[0],m[1],m[2]
+							m.names.each do |x|
+								puts x + " : " + m[x]
+							end
+							record[k] = m['scavenged']
+							remnants = m['remnants']
+							record[remnants] = record.delete neighbour_key
+						end
+					end
+				end
+				return record
 			end
 
 		end
