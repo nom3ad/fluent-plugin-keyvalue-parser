@@ -1,11 +1,14 @@
 require 'fluent/parser'
 require 'fluent/log'
 require 'fluent/time'
+require 'json'
 
 
 module Fluent
 	class TextParser
 		class JsonKeyValueParser < Parser
+
+			QUOTE = "\""
 
 			# Register this parser as "jsonify"
 			Plugin.register_parser("jsonify", self)
@@ -14,88 +17,74 @@ module Fluent
 			config_param :key_value_seperator, :string, :default => "," 
 
 			def configure(conf)
-
-			super
-
-			#  if @pair_delimiter.length != 1
-			#  raise ConfigError, "delimiter must be a single character. #{@delimiter} is not."
-			# end
-
+				super
+				#  if @pair_@pair_delimiteiter.length != 1
+				#  raise ConfigError, "@pair_delimiteiter must be a single character. #{@@pair_delimiteiter} is not."
+				# end
 			end
 
 			def parse(text)
 				record = {}
-				tokens = text.split(@pair_delimiter)
+				is_at_key =true
 				is_quote_open = false
+				
 				key_name = ""
 				value = ""
-				tokens.each_with_index do |item,idx|
-					
-					if is_quote_open
-						if item[-1] == "\""
-							is_quote_open = false
-							value  = [value,item[0..-2]].join(@pair_delimiter)
-							record[key_name] = value
-							value = "";key_name = ""
+
+				text.each_char do |chr| 
+
+					if is_quote_open && chr != QUOTE
+						if is_at_key
+							key_name << chr
 						else
-							value  = [value,item].join(@pair_delimiter)
+							value << chr
 						end
 						next
 					end
 
-					if item.split(@key_value_seperator,2)[1].nil?
+					case chr
+					when QUOTE
+						is_quote_open = !is_quote_open
+						next
 
-						if is_quote_open
-							if item[-1] == "\""
-								#puts "end quote_found" + " at " + item
-								value << (@pair_delimiter + item[0..-2])
-								is_quote_open = false
-								record[key_name] = value
-								value = "";key_name = ""
-							else
-								value << (@pair_delimiter + item)
-							end
-						else
-							key_name << (item + @pair_delimiter)
+					when @pair_delimiter
+						if is_at_key
+							key_name << chr
+							next
 						end
-
+						record[key_name] = value
+						key_name = ""
+						value = ""
+						is_at_key = true
+						next
+					when @key_value_seperator
+						if is_at_key then 
+							is_at_key = false 
+						else
+							value << chr
+						end
+						next
 					else
-						parts = item.split(@key_value_seperator)
-						#$log.info "parts : " + parts.to_s
-						k = parts[0]
-						v = parts[1..-1].join(@key_value_seperator)
-						#$log.info "key :" + k + "  " + "values : "+ v
-
-						#if !is_quote_open
-							key_name << k
-						#else
-						#	value << (@pair_delimiter+k + @key_value_seperator)
-						#end
-
-						if v[0] == "\""
-							is_quote_open = true
-							if v[-1] == "\""
-								is_quote_open = false
-								value << v[1..-2]
-								record[key_name] = value
-								value = "";key_name = ""
-							else
-								value << v[1..-1]
-							end
+						if is_at_key
+							key_name << chr
 						else
-							is_quote_open = false
-							value << v
-							record[key_name] = value
-							value = "";key_name = ""
+							value << chr
 						end
+						next
 					end
 				end
 
-				# append unparsed tail item to last key
-				record[record.keys.last] << (@pair_delimiter + key_name)
-				#$log.debug "gonna emit this record: " + record.to_s + " when ticks at " + time.to_s
-				yield nil, record
+				if key_name != "" 
+					if value != "" then 
+						record[key_name] = value 
+					else 
+						record[record.keys.last] << @pair_delimiter << key_name
+					end 
+				end
+
+				yield nil,record
 			end
+
 		end
 	end
 end
