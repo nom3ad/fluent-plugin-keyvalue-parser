@@ -5,12 +5,12 @@ $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-jsonify"
-  spec.version       = "0.0.1"
+  spec.version       = "0.1.1"
   spec.authors       = ["arun mj"]
-  spec.email         = ["arun.muraleedharan@flytxt.com"]
+  spec.email         = ["arunmj001@gmail.com"]
   spec.homepage      = "https://github.com/arunmj/fluent-plugin-jsonify"
-  spec.description   = %q{Fluentd parser plugin to parse key-value pairs}
-  spec.summary       = %q{Fluentd parser plugin to parse key-value pairs}
+  spec.description   = %q{Fluent parser plugin to parse key-value pairs}
+  spec.summary       = %q{Fluent parser plugin to parse key-value pairs}
   spec.license       = "MIT"
   spec.has_rdoc      = false
 
@@ -22,4 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'fluentd', "~> 0.10"
   spec.add_development_dependency "rake", ">0"
   spec.add_development_dependency "rspec", ">0"
+
+  spec.required_ruby_version = '~> 2.0'
 end

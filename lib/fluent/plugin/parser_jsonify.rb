@@ -40,7 +40,8 @@ module Fluent
 
 
 			def configure(conf)
-				super			end
+				super			
+			end
 
 			def parse(text)
 				
@@ -102,7 +103,6 @@ module Fluent
 				end
 
 				if @adjustment_rules 
-					$log.info "adjusting record ..."
 					record = adjust_record(record)
 				end
 				yield nil,record
@@ -113,6 +113,7 @@ module Fluent
 			def adjust_record(record)
 				record.keys.each_with_index do |k,i|
 					if adjustment_rules.key? k
+						$log.debug "adjusting record ... for key : #{k}"
 						neighbour_key = record.keys[i+1]
 						valstr = [record[k],neighbour_key].join(@pair_delimiter)
 						puts "origina : " + valstr
