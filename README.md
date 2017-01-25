@@ -101,4 +101,4 @@ will be parsed as
    
    `adjustment_rules {"service":"NETBIOS \\(.*\\)"}` in configuration.
    
-   this will parse *service* key with value containing NETBIOS(NS) whenever it occures.
+   this will parse *service* key with value containing *NETBIOS(NS)* whenever it occures.
