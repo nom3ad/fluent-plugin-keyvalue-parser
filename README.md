@@ -74,7 +74,7 @@ will be parsed as
     By default it is "="
 - **adjustment_rules**
 
-    Regular expression rules for some keys, repesented as json , to adjust parsed records accordingly.
+    Regular expression rules for some keys, represented as json , to adjust parsed records accordingly.
     
     {key1:regex1,key2:regex2}
     
@@ -86,7 +86,7 @@ will be parsed as
   
   `devname=FT6H `**`service=NETBIOS (NS)`**`proto=17 src zone=Trust dst zone=Untrust`
   
-   will be parse as 
+   will be parsed as 
    
    ```json
    {"devname":"FT6H","service":"http","proto":"6","src zone":"Trust","dst zone":"Untrust"}
