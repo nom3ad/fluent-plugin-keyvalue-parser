@@ -46,7 +46,7 @@ will be parsed as
 ```
 
 ####NOTE
-* if the key is not quotted and pair_delimiter occures in key,plugin will handle it.
+* if the key is not in quotes and pair_delimiter occures in key,plugin will handle it.
   
   eg:
   
@@ -58,7 +58,7 @@ will be parsed as
   ```json
   {"devname":"FT6H", "duration":"194","service":"http","src zone":"Trust","policy_id":"194"}
   ```
-* But if value is not quoted, you should use optional parameter *'adjustment_rules'* to correct parsing.
+* But if value is not quoted, you should use optional parameter *'adjustment_rules'* to correct the parsing.
 
 ## Option Parameters
 
@@ -80,11 +80,11 @@ will be parsed as
     
    eg:
    
-   noramlly following logs,
+   normally following logs,
    
-  `devname=FT6H `**`service=http`** `proto=6 src zone=Trust dst zone=Untrust`
+  `devname=FT6H `**`service=http`**`proto=6 src zone=Trust dst zone=Untrust`
   
-  `devname=FT6H `**`service=NETBIOS (NS)`** `proto=17 src zone=Trust dst zone=Untrust`
+  `devname=FT6H `**`service=NETBIOS (NS)`**`proto=17 src zone=Trust dst zone=Untrust`
   
    will be parse as 
    
@@ -95,9 +95,9 @@ will be parsed as
    ```   
    in second case where key *"service"* only received first part of its value, becouse value not quoted and delimiter(here space) occured in value. 
    
-   Also next key *"proto"* is wrongly taken as "(NS) proto".
+   Also next key *"proto"* is wrongly taken as *"(NS) proto"*.
    
-   to overcome these problem we can use,
+   to overcome this problem we can use,
    
    `adjustment_rules {"service":"NETBIOS \\(.*\\)"}` in configuration.
    
