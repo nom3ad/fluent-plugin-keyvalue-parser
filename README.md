@@ -1,4 +1,4 @@
-#fluent-plugin-jsonify
+#fluent-plugin-keyvalue-parser
 
 [Fluent](http://www.fluentd.org/) parser plugin for key:value formatted logs.
 
@@ -6,7 +6,7 @@
 ##Installation
 
 ```shell
-$ td-agent-gem install fluent-plugin-jsonify
+$ td-agent-gem install fluent-plugin-keyvalue-parser
 ```
 
 ##How to use
@@ -22,14 +22,14 @@ Edit `/etc/td-agent/td-agent.conf` file.
   pair_delimiter  ","
   key_value_seperator "="
   pos_file /var/run/td-agent/netscreen-log.pos
-  format jsonify
+  format keyvalue
 </source>
 ```
 * with parser plugin
 ```conf
 <filter tag>
  type parser
- format jsonify
+ format keyvalue
  pair_delimiter  ","
  key_value_seperator "="
  key_name keyToParse
@@ -93,12 +93,12 @@ will be parsed as
    
    {"devname":"FT6H","service":"NETBIOS","(NS) proto":"6","src zone":"Trust","dst zone":"Untrust"}
    ```   
-   in second case where key *"service"* only received first part of its value, becouse value not quoted and delimiter(here space) occured in value. 
+   in second case, key *"service"* only received first part of its value, becouse value not quoted and delimiter(here space) occured in the value. 
    
-   Also next key *"proto"* is wrongly taken as *"(NS) proto"*.
+   Also next key *"proto"* is wrongly parsed as *"(NS) proto"*.
    
-   to overcome this problem we can use,
+   to rectify this problem, we can use,
    
-   `adjustment_rules {"service":"NETBIOS \\(.*\\)"}` in configuration.
+   `adjustment_rules {"service":"NETBIOS \\(.*\\)"}`  in configuration.
    
-   this will parse *service* key with value containing *NETBIOS(NS)* whenever it occures.
+   this will parse *service* key with a value containing *NETBIOS (NS)* whenever it occures.
