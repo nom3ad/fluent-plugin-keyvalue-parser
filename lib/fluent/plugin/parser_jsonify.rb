@@ -6,12 +6,12 @@ require 'json'
 
 module Fluent
 	class TextParser
-		class JsonKeyValueParser < Parser
+		class KeyValueParser < Parser
 
 			QUOTE = "\""
 
-			# Register this parser as "jsonify"
-			Plugin.register_parser("jsonify", self)
+			# Register this parser as "keyvalue"
+			Plugin.register_parser("keyvalue", self)
 
 			config_param :pair_delimiter,      :string, :default => " " 
 			config_param :key_value_seperator, :string, :default => "," 

@@ -4,11 +4,11 @@
 $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluent-plugin-jsonify"
-  spec.version       = "0.1.1"
-  spec.authors       = ["arun mj"]
+  spec.name          = "fluent-plugin-keyvalue-parser"
+  spec.version       = "0.1.2"
+  spec.authors       = ["Arun M J"]
   spec.email         = ["arunmj001@gmail.com"]
-  spec.homepage      = "https://github.com/arunmj/fluent-plugin-jsonify"
+  spec.homepage      = "https://github.com/arunmj/fluent-plugin-keyvalue-parser"
   spec.description   = %q{Fluent parser plugin to parse key-value pairs}
   spec.summary       = %q{Fluent parser plugin to parse key-value pairs}
   spec.license       = "MIT"
