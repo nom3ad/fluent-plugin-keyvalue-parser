@@ -5,7 +5,7 @@ $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-keyvalue-parser"
-  spec.version       = "0.1.3"
+  spec.version       = "0.1.4"
   spec.authors       = ["Arun M J"]
   spec.email         = ["arunmj001@gmail.com"]
   spec.homepage      = "https://github.com/arunmj/fluent-plugin-keyvalue-parser"
