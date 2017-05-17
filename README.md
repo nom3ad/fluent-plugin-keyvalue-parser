@@ -1,15 +1,15 @@
-#fluent-plugin-keyvalue-parser
+# fluent-plugin-keyvalue-parser
 
 [Fluent](http://www.fluentd.org/) parser plugin for key:value formatted logs.
 
 
-##Installation
+## Installation
 
 ```shell
 $ td-agent-gem install fluent-plugin-keyvalue-parser
 ```
 
-##How to use
+## How to use
 
 Edit `/etc/td-agent/td-agent.conf` file.
 
@@ -45,7 +45,7 @@ will be parsed as
 {"key1":"val1", "key2":"value2","some key":"somevalue","diff_key":"another value"}
 ```
 
-####NOTE
+#### NOTE
 * if the key is not in quotes and pair_delimiter occures in key,plugin will handle it.
   
   eg:
